@@ -29,12 +29,12 @@ export const AuthProvider = ({ children }) => {
         setToken(res.authToken);
         localStorage.setItem("authToken", res.authToken);
         navigate("/");
-        return;
+        return true;
       }
-      console.log("Identifiants Incorrects");
-      return;
+      return false;
     } catch (err) {
       console.error(err);
+      return false;
     }
   };
 
@@ -44,14 +44,37 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("authToken");
     navigate("/login");
   };
+  
+  const signupAction = async (data) => {
+    try {
+      const response = await fetch("http://localhost:5005/auth/signup", {        //  <<<< backend api here <<<
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
+      if (res.user) { return true; }
+      return false;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
+  
+
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContext.Provider value={{ token, user, loginAction, logOut, signupAction }}>
       {children}
     </AuthContext.Provider>
   );
 
 };
+
+
+
 
 
 
