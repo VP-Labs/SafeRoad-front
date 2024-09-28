@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components'
 import { useAuth } from "../../utils/hooks/index.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -13,12 +14,12 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   
   const auth = useAuth();
-
+  const navigate = useNavigate();
 
 
 
   // Gestion de la soumission du formulaire
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Empêche le rechargement de la page par défaut
 
     // Exemple de validation basique
@@ -26,21 +27,32 @@ function Login() {
       setErrorMessage('Veuillez remplir tous les champs.');
       return;
     }
-
-    // Login
-    auth.loginAction({ email: email, password: password });
-
-    // Réinitialisation du formulaire après soumission réussie
+    
+    var pEmail = email;
+    var pPassword = password;
+    // Réinitialisation du formulaire
     setErrorMessage('');
     setEmail('');
     setPassword('');
+
+    // Login
+    var resultat = await auth.loginAction({ email: pEmail, password: pPassword });
+    if(resultat == false) { setErrorMessage('Identifiants incorrect.'); }
+
     return;
+  };
+  
+  
+  const handleClickButton = async (e) => {
+    e.preventDefault();
+    navigate("/signup");
   };
   
 
 
 
   return (
+    <div>
     <Container>
       <h2>Connexion</h2>
       <FormLogin onSubmit={handleSubmit}>
@@ -75,6 +87,9 @@ function Login() {
         <FormButton type="submit">Se connecter</FormButton>
       </FormLogin>
     </Container>
+    <ButtonIntoSubscribe onClick={handleClickButton}>Pas encore inscrit? Cliquez ici!</ButtonIntoSubscribe>
+    </div>
+    
   );
 }
 
@@ -129,7 +144,19 @@ const ErrorMsg = styled.p`
 	margin-bottom: 10px;
 `
 
+const ButtonIntoSubscribe = styled.button`
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 50px;
 
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 
 
 
