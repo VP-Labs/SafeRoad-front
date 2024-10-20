@@ -9,8 +9,8 @@ export const AuthContext = createContext();
 
 
 export const AuthProvider = ({ children }) => {
-
-  const [user, setUser] = useState(null);
+  
+  const [user, setUser] = useState(localStorage.getItem("authUser") || "");
   const [token, setToken] = useState(localStorage.getItem("authToken") || "");
   const navigate = useNavigate();
   
@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       const res = await response.json();
       if (res.authToken) {
         setUser(data.email);
+        localStorage.setItem("authUser", data.email);
         setToken(res.authToken);
         localStorage.setItem("authToken", res.authToken);
         navigate("/");
@@ -39,9 +40,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logOut = () => {
-    setUser(null);
+    setUser("");
     setToken("");
     localStorage.removeItem("authToken");
+    localStorage.removeItem("authUser");
     navigate("/login");
   };
   

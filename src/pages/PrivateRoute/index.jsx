@@ -8,7 +8,7 @@ import { useAuth } from "../../utils/hooks/index.jsx";
 
 const PrivateRoute = () => {
   const user = useAuth();
-  if (!user.token) return <Navigate to="/login" />;
+  if (!user.token || !user.user) return <Navigate to="/login" />;
   return <Outlet />;
 };
 

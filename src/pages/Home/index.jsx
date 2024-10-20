@@ -19,7 +19,7 @@ const Home = () => {
   return (
       <Container>
         <h1>Welcome! </h1>
-        <QuestionnaireButton onClick={(e) => handleButtonStartQuestions(e)}>Commencez une série ici.</QuestionnaireButton>
+        <QuestionnaireButton onClick={(e) => handleButtonStartQuestions(e)}>Commencez ou continuer une série ici.</QuestionnaireButton>
         <LogoutButton onClick={() => auth.logOut()}> logout </LogoutButton>
       </Container>
   );
@@ -71,8 +71,6 @@ const LogoutButton = styled.button`
     background-color: #e60000; /* Couleur plus foncée au survol */
   }
 `;
-
-
 
 
 

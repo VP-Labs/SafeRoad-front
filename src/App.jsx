@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './utils/context/auth.jsx'
+import { DatasProvider } from './utils/context/datas.jsx'
 import PrivateRoute from './pages/PrivateRoute'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -16,7 +17,7 @@ function App() {
   return (
     <>
       <Router>
-          <AuthProvider>
+          <DatasProvider><AuthProvider>
 	      <Routes>
 	          <Route path="/login" element={<Login />} />
 	          <Route path="/signup" element={<Signup />} />
@@ -26,7 +27,7 @@ function App() {
 	          </Route>
 	          <Route path="*" element={<Error />} />
 	      </Routes>
-          </AuthProvider>
+          </AuthProvider></DatasProvider>
       </Router>
     </>
   )
