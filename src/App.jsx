@@ -7,7 +7,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Questionnaire from './pages/Questionnaire'
-// import Error from './pages/Error'
+import Error from './pages/Error'
 import './App.css'
 import { createTheme, ThemeProvider } from '@mui/material'
 
@@ -47,7 +47,7 @@ function App() {
 	              <Route path="/" element={<Home />} />
 	              <Route path="/questionnaire" element={<Questionnaire />} />
 	          </Route>
-	          {/* <Route path="*" element={<Error />} /> */}
+	          <Route path="*" element={<Error />} />
 	      </Routes>
           </AuthProvider></DatasProvider>
       </Router>
