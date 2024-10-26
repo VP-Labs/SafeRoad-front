@@ -1,79 +1,145 @@
-import styled from 'styled-components'
-import React, { useEffect } from "react";
-import { useAuth } from "../../utils/hooks/index.jsx";
+import React from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Button,
+  Box,
+  Card,
+  CardContent,
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  useMediaQuery,
+} from '@mui/material';
+import { DirectionsCar, PlayArrow, ExitToApp, EmojiEvents, School, History } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../utils/hooks/index.jsx";
 
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#2196f3',
+    },
+    secondary: {
+      main: '#90caf9',
+    },
+    background: {
+      default: '#000000',
+      paper: '#0d47a1',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#bdbdbd',
+    },
+  },
+});
 
-
-
-const Home = () => {
+export default function Component() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const handleButtonStartQuestions = async (e) => {
     e.preventDefault();
     navigate("/questionnaire");
   };
-  
-  
+
   return (
-      <Container>
-        <h1>Welcome! </h1>
-        <QuestionnaireButton onClick={(e) => handleButtonStartQuestions(e)}>Commencez ou continuer une série ici.</QuestionnaireButton>
-        <LogoutButton onClick={() => auth.logOut()}> logout </LogoutButton>
-      </Container>
+    <>
+      <CssBaseline />
+      <Box sx={{ 
+        flexGrow: 1, 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        background: 'linear-gradient(to bottom left, #0d47a1, #000000)',
+      }}>
+        <AppBar position="static" sx={{ backgroundColor: 'rgba(13, 71, 161, 0.7)' }}>
+          <Toolbar>
+            <DirectionsCar sx={{ mr: 2 }} />
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              SafeRoad
+            </Typography>
+            <Button color="inherit" startIcon={<ExitToApp />} onClick={() => auth.logOut()}>
+              Se déconnecter
+            </Button>
+          </Toolbar>
+        </AppBar>
+
+        <Container component="main" sx={{ mt: 8, mb: 2, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Typography variant="h2" component="h1" gutterBottom sx={{ color: 'text.primary' }}>
+            Bienvenue
+          </Typography>
+          <Typography variant="h5" component="h2" gutterBottom sx={{ textAlign: "center", color: 'text.primary' }}>
+            Préparez-vous à réussir votre examen du code de la route
+          </Typography>
+
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<PlayArrow />}
+            sx={{ mt: 4, mb: 2 }}
+            onClick={handleButtonStartQuestions}
+          >
+            Commencer une série de questions
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
+            startIcon={<History />}
+            sx={{ mb: 4 }}
+          >
+            Consultez vos séries passées
+          </Button>
+
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? "center" : "normal",
+            justifyContent: 'center', 
+            gap: 4, 
+            width: '100%', 
+            mt: 4 
+          }}>
+            <Card sx={{ minWidth: 275, flex: 1, maxWidth: 345, backgroundColor: 'background.paper' }}>
+              <CardContent>
+                <School fontSize="large" color="secondary" />
+                <Typography variant="h5" component="div" sx={{ mt: 2, color: 'text.primary' }}>
+                  Apprenez à votre rythme
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                  Des séries de questions adaptées à votre niveau et à votre progression.
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card sx={{ minWidth: 275, flex: 1, maxWidth: 345, backgroundColor: 'background.paper' }}>
+              <CardContent>
+                <EmojiEvents fontSize="large" color="secondary" />
+                <Typography variant="h5" component="div" sx={{ mt: 2, color: 'text.primary' }}>
+                  Suivez vos progrès
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                  Visualisez votre évolution et identifiez vos points d'amélioration.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+        </Container>
+
+        <Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <Container maxWidth="sm">
+            <Typography variant="body2" color="text.secondary" align="center">
+              © {new Date().getFullYear()} SafeRoad. Tous droits réservés.
+            </Typography>
+          </Container>
+        </Box>
+      </Box>
+    </>
   );
-};
-
-
-
-
-
-
-
-
-
-// CSS ----------------------------------------------------------------------------
-
-const Container = styled.div`
-	display: flex;
-	flex-direction: column;
-	min-Width: 800px;
-	border: 1px solid #ccc;
-	border-radius: 10px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-`
-
-const QuestionnaireButton = styled.button`
-	padding: 10px;
-	font-size: 16px;
-	background-color: #007bff;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	height: 80px;
-`
-
-const LogoutButton = styled.button`
-  background-color: #ff4b4b; /* Couleur de fond */
-  color: white; /* Couleur du texte */
-  border: none; /* Supprimer la bordure */
-  padding: 10px 20px; /* Espacement interne (padding) */
-  font-size: 16px; /* Taille du texte */
-  border-radius: 5px; /* Bords arrondis */
-  cursor: pointer; /* Changement du curseur au survol */
-  transition: background-color 0.3s ease; /* Animation pour un effet de transition */
-  margin-top: 50px;
-  height: 80px;
-
-  &:hover {
-    background-color: #e60000; /* Couleur plus foncée au survol */
-  }
-`;
-
-
-
-
-export default Home;
-
+}
