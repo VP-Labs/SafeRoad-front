@@ -1,14 +1,39 @@
 import React, { useState } from 'react';
-import styled from 'styled-components'
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Box,
+  Typography,
+  Container,
+  TextField,
+  Button,
+  Alert,
+} from '@mui/material';
 import { useAuth } from "../../utils/hooks/index.jsx";
 import { useNavigate } from "react-router-dom";
 
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#2196f3',
+    },
+    secondary: {
+      main: '#90caf9',
+    },
+    background: {
+      default: '#000000',
+      paper: '#0d47a1',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#bdbdbd',
+    },
+  },
+});
 
-
-
-
-function Login() {
-  // Gestion des états des champs
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -16,149 +41,101 @@ function Login() {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  
-
-  // Gestion de la soumission du formulaire
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Empêche le rechargement de la page par défaut
+    event.preventDefault();
 
-    // Exemple de validation basique
     if (email === '' || password === '') {
       setErrorMessage('Veuillez remplir tous les champs.');
       return;
     }
     
-    var pEmail = email;
-    var pPassword = password;
-    // Réinitialisation du formulaire
-    setErrorMessage('');
-    setEmail('');
-    setPassword('');
-
-    // Login
-    var resultat = await auth.loginAction({ email: pEmail, password: pPassword });
-    if(resultat == false) { setErrorMessage('Identifiants incorrect.'); }
-
-    return;
+    const result = await auth.loginAction({ email, password });
+    if(result === false) {
+      setErrorMessage('Identifiants incorrects.');
+    } else {
+      setEmail('');
+      setPassword('');
+      setErrorMessage('');
+    }
   };
-  
   
   const handleClickButton = async (e) => {
     e.preventDefault();
     navigate("/signup");
   };
-  
-
-
 
   return (
-    <div>
-    <Container>
-      <h2>Connexion</h2>
-      <FormLogin onSubmit={handleSubmit}>
-        {/* Champ email */}
-        <FormGroup>
-          <label>Email :</label>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Entrez votre email"
-            required
-          />
-        </FormGroup>
-
-        {/* Champ mot de passe */}
-        <FormGroup>
-          <label>Mot de passe :</label>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Entrez votre mot de passe"
-            required
-          />
-        </FormGroup>
-
-        {/* Message d'erreur */}
-        {errorMessage && <ErrorMsg>{errorMessage}</ErrorMsg>}
-
-        {/* Bouton de soumission */}
-        <FormButton type="submit">Se connecter</FormButton>
-      </FormLogin>
-    </Container>
-    <ButtonIntoSubscribe onClick={handleClickButton}>Pas encore inscrit? Cliquez ici!</ButtonIntoSubscribe>
-    </div>
-    
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ 
+        flexGrow: 1, 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        background: 'linear-gradient(to bottom left, #0d47a1, #000000)',
+      }}>
+        <Container component="main" maxWidth="xs" sx={{ mt: 8, mb: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              bgcolor: 'rgba(13, 71, 161, 0.7)',
+              p: 4,
+              borderRadius: 2,
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
+            }}
+          >
+            <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+              Connexion
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Mot de passe"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errorMessage && <Alert severity="error" sx={{ mt: 2 }}>{errorMessage}</Alert>}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Se connecter
+              </Button>
+            </Box>
+          </Box>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={handleClickButton}
+            sx={{ mt: 3 }}
+          >
+            Pas encore inscrit? Cliquez ici!
+          </Button>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }
-
-
-
-
-
-
-
-// CSS ----------------------------------------------------------------
-
-const Container = styled.div`
-	maxWidth: 400px;
-	margin: 0 auto;
-	padding: 20px;
-	text-align: center;
-	border: 1px solid #ccc;
-	border-radius: 10px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-`
-
-const FormLogin = styled.form`
-	display: flex;
-	flex-direction: column;
-`
-
-const FormGroup = styled.div`
-	margin-bottom: 15px;
-`
-
-const Input = styled.input`
-	padding: 10px;
-	font-size: 16px;
-	width: 100%;
-	box-sizing: border-box;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-`
-
-const FormButton = styled.button`
-	padding: 10px;
-	font-size: 16px;
-	background-color: #007bff;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-`
-
-const ErrorMsg = styled.p`
-	color: red;
-	margin-bottom: 10px;
-`
-
-const ButtonIntoSubscribe = styled.button`
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 50px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-
-
-export default Login;
-
