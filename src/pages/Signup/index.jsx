@@ -124,7 +124,7 @@ const DivContainer = styled.div`
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  ${'' /* background-color: #f9f9f9; */}
 `;
 
 const FormSignup = styled.form`
