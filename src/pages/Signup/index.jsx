@@ -1,53 +1,22 @@
 import React, { useState } from 'react';
-import {
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  Box,
-  Typography,
-  Container,
-  TextField,
-  Button,
-  Alert,
-} from '@mui/material';
+import { useTheme, Box, Typography, Container, TextField, Button, Alert, } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
 import { useAuth } from "../../utils/hooks/index.jsx";
 import { useNavigate } from "react-router-dom";
 
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#2196f3',
-    },
-    secondary: {
-      main: '#90caf9',
-    },
-    background: {
-      default: '#000000',
-      paper: '#0d47a1',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#bdbdbd',
-    },
-  },
-});
+
 
 export default function Signup() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [accountCreated, setAccountCreated] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validate = () => {
@@ -71,6 +40,7 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAccountCreated(false);
+    document.activeElement.blur();
     
     const formErrors = validate();
     if (Object.keys(formErrors).length > 0) {
@@ -80,6 +50,7 @@ export default function Signup() {
       if(result === false) {
         setErrors({ general: "Formulaire incorrect." });
       } else {
+      	setFormData({ email: '', password: '' });
         setAccountCreated(true);
         setErrors({});
       }
@@ -91,83 +62,23 @@ export default function Signup() {
     navigate("/login");
   };
 
+
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ 
-        flexGrow: 1, 
-        minHeight: '100vh', 
-        display: 'flex', 
-        flexDirection: 'column',
-        background: 'linear-gradient(to bottom left, #0d47a1, #000000)',
-      }}>
-        <Container component="main" maxWidth="xs" sx={{ mt: 8, mb: 2 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              bgcolor: 'rgba(13, 71, 161, 0.7)',
-              p: 4,
-              borderRadius: 2,
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
-            }}
-          >
-            <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-              Inscription
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={formData.email}
-                onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Mot de passe"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                value={formData.password}
-                onChange={handleChange}
-                error={!!errors.password}
-                helperText={errors.password}
-              />
-              {errors.general && <Alert severity="error" sx={{ mt: 2 }}>{errors.general}</Alert>}
-              {accountCreated && <Alert severity="success" sx={{ mt: 2 }}>VOUS AVEZ CRÉÉ UN COMPTE AVEC SUCCÈS!</Alert>}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                S'inscrire
-              </Button>
+      <Box sx={{ minHeight: '100vh', display: 'flex', justifyContent: { xs: 'flex-start', sm :'center' }, alignItems: 'center', flexDirection: 'column', background: theme.palette.background.customBackground, }}>
+        <Container component="main" sx={{ marginTop: { xs: '100px', sm: '0px' }, mb: 2, width: { xs: '95%', sm: '360px', md: '360px', lg: '400px', xl: '430px' } }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', bgcolor: theme.palette.background.customPrimary, p: '7%', borderRadius: 2, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)', }}>
+            <Typography component="h1" variant="h4" sx={{ mb: 4, fontWeight: 600, }}> Inscription </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{  }}>
+              <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus value={formData.email} onChange={handleChange} error={!!errors.email} helperText={errors.email} />
+              <TextField margin="normal" required fullWidth name="password" label="Mot de passe" type="password" id="password" autoComplete="new-password" value={formData.password} onChange={handleChange} error={!!errors.password} helperText={errors.password} />              
+              {errors.general &&  <Alert severity="error"  sx={{ mt: 2, alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>{errors.general}</Alert>}           
+              {accountCreated &&  <Alert severity="success" sx={{ mt: 2, alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}> Compte créé avec succès! </Alert>}
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 0 }} > S'inscrire </Button>
             </Box>
           </Box>
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            onClick={handleClickButton}
-            sx={{ mt: 3 }}
-          >
-            Revenir à la page Login
-          </Button>
+          <Button fullWidth variant="contained" color="secondary" onClick={handleClickButton} sx={{ mt: 4 }}> Revenir à la page Login </Button>
         </Container>
       </Box>
-    </ThemeProvider>
   );
 }

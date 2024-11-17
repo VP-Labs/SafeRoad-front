@@ -1,45 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  Box,
-  Typography,
-  Container,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  CircularProgress,
-} from '@mui/material';
+import { useTheme, AppBar, Toolbar, Box, Typography, Container, FormGroup, FormControlLabel, Checkbox, Button, CircularProgress,} from '@mui/material';
+import { DirectionsCar, PlayArrow, ExitToApp, EmojiEvents, School, History } from '@mui/icons-material';
 import { useAuth, useDatas } from "../../utils/hooks/index.jsx";
 import { useNavigate } from "react-router-dom";
 
-// Création d'un thème personnalisé avec un mode sombre
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#2196f3', // Blue
-    },
-    secondary: {
-      main: '#90caf9', // Light Blue
-    },
-    background: {
-      default: '#000000',
-      paper: '#0d47a1', // Dark Blue
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#bdbdbd',
-    },
-  },
-});
+
 
 function Questionnaire() {
   const auth = useAuth();
   const datas = useDatas();
   const navigate = useNavigate();
+  const theme = useTheme();
   
   const [getError, setError] = useState(false);
   const [status, setStatus] = useState("waitingDatas");
@@ -52,6 +23,8 @@ function Questionnaire() {
   const [isLoading, setIsLoading] = useState(false);
   
   const currentQuestion = allQuestions[currentQuestionIndex];
+  
+  
   
   useEffect(() => {
     async function getQuests() {
@@ -109,92 +82,63 @@ function Questionnaire() {
     navigate("/");
   };
 
+
+
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ 
-        flexGrow: 1, 
-        minHeight: '100vh', 
-        display: 'flex', 
-        flexDirection: 'column',
-        background: 'linear-gradient(to bottom left, #0d47a1, #000000)',
-      }}>
-        <Container component="main" sx={{ mt: 8, mb: 2, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          {getError ? (
-            <Typography variant="h4" color="error">ERREUR, VEUILLEZ VOUS RECONNECTER</Typography>
-          ) : status === "waitingDatas" ? (
-            <CircularProgress size={60} />
-          ) : status === "Questionnary" ? (
-            <Box sx={{ 
-              width: '100%', 
-              maxWidth: 500, 
-              bgcolor: 'rgba(13, 71, 161, 0.7)', // Lowered opacity
-              p: 4, 
-              borderRadius: 2,
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)', // Added shadow
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center', // Center content
-            }}>
-              <Typography variant="h4" gutterBottom align="center">QUESTION {currentQuestionIndex + 1}</Typography>
-              <Typography variant="h6" gutterBottom align="center">{currentQuestion.question}</Typography>
-              <FormGroup>
-                {currentQuestion.propositions.map((option, index) => (
-                  <FormControlLabel
-                    key={index}
-                    control={
-                      <Checkbox
-                        checked={selectedOptions.includes(index)}
-                        onChange={() => handleOptionChange(index)}
-                        color="primary"
-                      />
-                    }
-                    label={option}
-                  />
-                ))}
-              </FormGroup>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNextQuestion}
-                disabled={isLoading}
-                sx={{ mt: 2, alignSelf: 'center', minWidth: '200px' }} // Center button and set minimum width
-              >
-                {isLoading ? (
-                  <CircularProgress size={24} color="inherit" />
-                ) : (
-                  currentQuestionIndex < allQuestions.length - 1 ? 'Question suivante' : 'Terminer'
-                )}
-              </Button>
-            </Box>
-          ) : status === "Results" ? (
-            <Box sx={{ 
-              width: '100%', 
-              maxWidth: 500, 
-              bgcolor: 'rgba(13, 71, 161, 0.7)', // Lowered opacity
-              p: 4, 
-              borderRadius: 2,
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)', // Added shadow
-              textAlign: 'center', // Center content
-            }}>
-              <Typography variant="h4" gutterBottom>RÉSULTATS</Typography>
-              <Typography variant="h5">VOTRE SCORE EST DE {finalScore}</Typography>
-            </Box>
-          ) : (
-            <Typography variant="h4" color="error">ERREUR</Typography>
-          )}
-        </Container>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleGoToHome}
-          >
-            Revenir à la page d'accueil
-          </Button>
+	  <Box sx={{ flexGrow: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column', background: theme.palette.background.customBackground, }}>
+	  	
+	  	<AppBar position="static" sx={{ backgroundColor: theme.palette.background.customPrimary }}>
+          <Toolbar sx={{  }}> 
+          	<DirectionsCar sx={{ mr: 2 }} />
+          	<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> SafeRoad </Typography>
+			<Button color="inherit" startIcon={<ExitToApp />} onClick={() => auth.logOut()}> Se déconnecter </Button>
+          </Toolbar>
+        </AppBar>
+        
+		<Container component="main" sx={{ mt: 8, mb: 2, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+		  {getError ? (
+		    <Typography variant="h3" color="error">ERREUR, VEUILLEZ VOUS RECONNECTER</Typography>
+		  ) : status === "waitingDatas" ? (
+		    <CircularProgress size={60} />
+		  ) : status === "Questionnary" ? (
+		    <Box sx={{ width: '96%', maxWidth: { xs: '500px', sm: '460px', md: '460px', lg: '480px', xl: '500px' }, bgcolor: theme.palette.background.customPrimary, p: 4, borderRadius: 2, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)', display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
+		      <Typography variant="h4" gutterBottom align="center" sx= {{ fontWeight: 550, }}>QUESTION {currentQuestionIndex + 1}</Typography>
+		      <Typography variant="h6" gutterBottom align="center">{currentQuestion.question}</Typography>
+		      <FormGroup>
+		        {currentQuestion.propositions.map((option, index) => (
+		          <FormControlLabel key={index} control={ <Checkbox checked={selectedOptions.includes(index)} onChange={() => handleOptionChange(index)} color="primary" /> } label={option} />
+		        ))}
+		      </FormGroup>
+		      <Button variant="contained" color="primary" onClick={handleNextQuestion} disabled={isLoading} sx={{ mt: 2, alignSelf: 'center', minWidth: '200px' }} >
+		        {isLoading ? (
+		          <CircularProgress size={24} color="inherit" />
+		        ) : (
+		          currentQuestionIndex < allQuestions.length - 1 ? 'Question suivante' : 'Terminer'
+		        )}
+		      </Button>
+		    </Box>
+		  ) : status === "Results" ? (
+		    <Box sx={{ width: '96%', maxWidth: { xs: '500px', sm: '460px', md: '460px', lg: '480px', xl: '500px' }, minHeight: '200px', bgcolor: theme.palette.background.customPrimary, p: 4, borderRadius: 2, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
+		      <Typography variant="h3" gutterBottom sx= {{ fontWeight: 550, }}>RÉSULTATS</Typography>
+		      <Typography variant="h5">Votre score est de {finalScore} sur 3</Typography>
+		    </Box>
+		  ) : (
+		    <Typography variant="h4" color="error">ERREUR</Typography>
+		  )}
+		</Container>
+		
+		<Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+		  <Button variant="contained" color="secondary" onClick={handleGoToHome} > Revenir à la page d'accueil </Button>
+		</Box>
+		
+		<Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <Container maxWidth="sm">
+            <Typography variant="body2" color="text.secondary" align="center"> © {new Date().getFullYear()} SafeRoad. Tous droits réservés. </Typography>
+          </Container>
         </Box>
-      </Box>
-    </ThemeProvider>
+        
+	  </Box>
   );
 }
 
