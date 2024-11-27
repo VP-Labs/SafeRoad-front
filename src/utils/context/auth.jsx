@@ -1,5 +1,6 @@
 import React, { useState, createContext } from 'react'
 import { useNavigate } from "react-router-dom";
+import { API_ENDPOINT } from '../../../api.config';
 
 
 
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   
   const loginAction = async (data) => {
     try {
-      const response = await fetch("http://localhost:5005/auth/login", {        //  <<<< backend api here <<<
+      const response = await fetch(API_ENDPOINT + "/auth/login", {        //  <<<< backend api here <<<
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   
   const signupAction = async (data) => {
     try {
-      const response = await fetch("http://localhost:5005/auth/signup", {        //  <<<< backend api here <<<
+      const response = await fetch(API_ENDPOINT + "/auth/signup", {        //  <<<< backend api here <<<
         method: "POST",
         headers: {
           "Content-Type": "application/json",

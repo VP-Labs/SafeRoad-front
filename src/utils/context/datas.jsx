@@ -1,5 +1,6 @@
 import React, { useState, createContext } from 'react'
-
+import { API_ENDPOINT } from '../../../api.config';
+API_ENDPOINT
 
 
 // MANAGE AUTH DIRECTLY WITH HOOKS --------------------------------------
@@ -13,7 +14,7 @@ export const DatasProvider = ({ children }) => {
   const GetQuestions = async (token) => {
     try {
       var tokenToSend = "Bearer " + token;
-      const response = await fetch("http://localhost:5005/datas/questions", {        //  <<<< backend api here <<<
+      const response = await fetch(API_ENDPOINT + "/datas/questions", {        //  <<<< backend api here <<<
         method: "GET",
         headers: {
           "authorization": tokenToSend,
@@ -30,7 +31,7 @@ export const DatasProvider = ({ children }) => {
   const QuestionnaryPost = async (token, selectedAnswers, indexQuestion) => {
     try {
       var tokenToSend = "Bearer " + token;
-      const response = await fetch("http://localhost:5005/datas/serie/last", {        //  <<<< backend api here <<<
+      const response = await fetch(API_ENDPOINT + "/datas/serie/last", {        //  <<<< backend api here <<<
         method: "POST",
         headers: {
           "Content-Type": "application/json",
